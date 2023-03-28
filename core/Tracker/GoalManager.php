@@ -758,6 +758,7 @@ class GoalManager
      * @param array $visitInformation
      * @param Request $request
      * @param Action|null $action
+     * @param int|null $convertedGoal
      * @return bool
      */
     protected function insertNewConversion($conversion, $visitInformation, Request $request, $action, $convertedGoal = null)
