@@ -19,59 +19,87 @@ class VisitProperties
      *
      * @var array
      */
-    private $visitInfo = array();
+    private $visitInfo = [];
+
+    /**
+     * Holds the original information about the current visit, this data is not changed during request processing
+     *
+     * @var array
+     */
+    private $originalVisitInfo = [];
 
     public function __construct(array $visitInfo = [])
     {
         $this->visitInfo = $visitInfo;
+        $this->originalVisitInfo = $visitInfo;
     }
 
     /**
      * Returns a visit property, or `null` if none is set.
      *
-     * @param string $name The property name.
+     * @param string $name     The property name.
+     * @param bool   $original Default false, return the original value before any request processing changes
      * @return mixed
      */
-    public function getProperty($name)
+    public function getProperty(string $name, bool $original = false)
     {
-        return isset($this->visitInfo[$name]) ? $this->visitInfo[$name] : null;
+        if ($original) {
+            return isset($this->originalVisitInfo[$name]) ? $this->originalVisitInfo[$name] : null;
+        } else {
+            return isset($this->visitInfo[$name]) ? $this->visitInfo[$name] : null;
+        }
     }
 
     /**
      * Returns all visit properties by reference.
      *
+     * @param bool   $original Default false, return the original array values before any request processing changes
      * @return array
      */
-    public function &getProperties()
+    public function &getProperties(bool $original = false): array
     {
-        return $this->visitInfo;
+        if ($original) {
+            return $this->originalVisitInfo;
+        } else {
+            return $this->visitInfo;
+        }
     }
 
     /**
      * Sets a visit property.
      *
      * @param string $name The property name.
-     * @param mixed $value The property value.
+     * @param mixed  $value The property value
+     * @param bool   $setOriginal If true then set the original value too
+     *
+     * @return void
      */
-    public function setProperty($name, $value)
+    public function setProperty(string $name, $value, bool $setOriginal = false): void
     {
         $this->visitInfo[$name] = $value;
+        if ($setOriginal) {
+            $this->originalVisitInfo[$name] = $value;
+        }
     }
 
     /**
      * Unsets all visit properties.
+     *
+     * @return void
      */
-    public function clearProperties()
+    public function clearProperties(): void
     {
-        $this->visitInfo = array();
+        $this->visitInfo = [];
     }
 
     /**
      * Sets all visit properties.
      *
      * @param array $properties
+     *
+     * @return void
      */
-    public function setProperties($properties)
+    public function setProperties(array $properties): void
     {
         $this->visitInfo = $properties;
     }
